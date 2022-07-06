@@ -1,22 +1,31 @@
 # Find Valptr, Mincode, Maxcode and Huffval from JpegSnoop (DHT) Huffman tables
 
-# Huffman table sample
+# Huffman table
 t = """Codes of length 01 bits (000 total): 
-    Codes of length 02 bits (002 total): 01 00 
-    Codes of length 03 bits (002 total): 02 11 
-    Codes of length 04 bits (001 total): 03 
-    Codes of length 05 bits (002 total): 04 21 
-    Codes of length 06 bits (003 total): 12 31 41 
-    Codes of length 07 bits (005 total): 05 51 13 61 22 
-    Codes of length 08 bits (005 total): 06 71 81 91 32 
-    Codes of length 09 bits (004 total): A1 B1 F0 14 
-    Codes of length 10 bits (005 total): C1 D1 E1 23 42 
-    Codes of length 11 bits (006 total): 15 52 62 72 F1 33 
-    Codes of length 12 bits (004 total): 24 34 43 82 
-    Codes of length 13 bits (008 total): 16 92 53 25 A2 63 B2 C2 
-    Codes of length 14 bits (003 total): 07 73 D2 
-    Codes of length 15 bits (003 total): 35 E2 44 
-    Codes of length 16 bits (109 total): 83 17 54 93 08 09 0A 18 19 26 36 45 1A 27 64 74 55 37 F2 A3 B3 C3 28 29 D3 E3 F3 84 94 A4 B4 C4 D4 E4 F4 65 75 85 95 A5 B5 C5 D5 E5 F5 46 56 66 76 86 96 A6 B6 C6 D6 E6 F6 47 57 67 77 87 97 A7 B7 C7 D7 E7 F7 38 48 58 68 78 88 98 A8 B8 C8 D8 E8 F8 39 49 59 69 79 89 99 A9 B9 C9 D9 E9 F9 2A 3A 4A 5A 6A 7A 8A 9A AA BA CA DA EA FA"""
+    Codes of length 02 bits (002 total): 01 02 
+    Codes of length 03 bits (001 total): 03 
+    Codes of length 04 bits (003 total): 04 11 05 
+    Codes of length 05 bits (004 total): 12 06 21 07 
+    Codes of length 06 bits (001 total): 13 
+    Codes of length 07 bits (003 total): 22 00 08 
+    Codes of length 08 bits (003 total): 31 14 41 
+    Codes of length 09 bits (002 total): 32 23 
+    Codes of length 10 bits (003 total): 15 09 51 
+    Codes of length 11 bits (003 total): 42 16 61 
+    Codes of length 12 bits (003 total): 24 33 17 
+    Codes of length 13 bits (002 total): 52 71 
+    Codes of length 14 bits (006 total): 81 18 62 91 25 43 
+    Codes of length 15 bits (009 total): A1 B1 F0 26 34 72 0A 19 C1 
+    Codes of length 16 bits (117 total): D1 35 27 E1 53 36 82 F1 92 A2 44 54 73 45 46 37 
+                                         47 63 28 55 56 57 1A B2 C2 D2 E2 F2 64 83 74 93 
+                                         84 65 A3 B3 C3 D3 E3 29 38 66 F3 75 2A 39 3A 48 
+                                         49 4A 58 59 5A 67 68 69 6A 76 77 78 79 7A 85 86 
+                                         87 88 89 8A 94 95 96 97 98 99 9A A4 A5 A6 A7 A8 
+                                         A9 AA B4 B5 B6 B7 B8 B9 BA C4 C5 C6 C7 C8 C9 CA 
+                                         D4 D5 D6 D7 D8 D9 DA E4 E5 E6 E7 E8 E9 EA F4 F5 
+                                         F6 F7 F8 F9 FA"""
+
+
 
 # Split lines
 lines = t.split("Codes of length")
@@ -25,6 +34,7 @@ lines = t.split("Codes of length")
 lines2d = []
 
 for line in lines[1::]:
+    line = line.replace('  ', '').replace('\n', '').replace('  ', ' ')
     ar = []
     if line.strip()[line.find(":")::] == '':
         ar.append('')
@@ -84,13 +94,7 @@ print("Huffval: " + str(huffvals))
 
 # Sample output:
 
-# valptr:
-# [0, 0, 1, 6, 7, 8, 9, 10, 11, 0, 0, 0, 0, 0, 0, 0]
-# min:
-# [0, 0, 2, 14, 30, 62, 126, 254, 510, 0, 0, 0, 0, 0, 0, 0]
-# max:
-# [-1, 0, 6, 14, 30, 62, 126, 254, 510, -1, -1, -1, -1, -1, -1, -1]
-# Huffval:
-# [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-
-
+# valptr: [0, 0, 2, 3, 6, 10, 11, 14, 17, 19, 22, 25, 28, 30, 36, 45]
+# min: [0, 0, 4, 10, 26, 60, 122, 250, 506, 1016, 2038, 4082, 8170, 16344, 32700, 65418]
+# max: [-1, 1, 4, 12, 29, 60, 124, 252, 507, 1018, 2040, 4084, 8171, 16349, 32708, 65534]
+# Huffval: [1, 2, 3, 4, 17, 5, 18, 6, 33, 7, 19, 34, 0, 8, 49, 20, 65, 50, 35, 21, 9, 81, 66, 22, 97, 36, 51, 23, 82, 113, 129, 24, 98, 145, 37, 67, 161, 177, 240, 38, 52, 114, 10, 25, 193, 209, 53, 39, 225, 83, 54, 130, 241, 146, 162, 68, 84, 115, 69, 70, 55, 71, 99, 40, 85, 86, 87, 26, 178, 194, 210, 226, 242, 100, 131, 116, 147, 132, 101, 163, 179, 195, 211, 227, 41, 56, 102, 243, 117, 42, 57, 58, 72, 73, 74, 88, 89, 90, 103, 104, 105, 106, 118, 119, 120, 121, 122, 133, 134, 135, 136, 137, 138, 148, 149, 150, 151, 152, 153, 154, 164, 165, 166, 167, 168, 169, 170, 180, 181, 182, 183, 184, 185, 186, 196, 197, 198, 199, 200, 201, 202, 212, 213, 214, 215, 216, 217, 218, 228, 229, 230, 231, 232, 233, 234, 244, 245, 246, 247, 248, 249, 250]
